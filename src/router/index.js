@@ -37,10 +37,10 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-  // if (to.path === '/login') return next()
-  // // 拿到token判断是否具有token
-  // const token = window.sessionStorage.getItem('token')
-  // if (!token) return next('/login')
+  if (to.path === '/login' || to.path === '/') return next()
+  // 拿到token判断是否具有token
+  const token = window.sessionStorage.getItem('admin')
+  if (!token) return next('/login')
   next()
 })
 export default router
