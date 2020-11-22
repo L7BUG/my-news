@@ -1,0 +1,58 @@
+{
+  "id": "1730509",
+  "name": "vue_shop",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8224217",
+      "name": "数据统计",
+      "font_class": "shuju",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "9032638",
+      "name": "商品管理",
+      "font_class": "shangpinguanli",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "10404755",
+      "name": "权限管理",
+      "font_class": "quanxian",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "13071703",
+      "name": "订单管理",
+      "font_class": "logooo_huabanfuben",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "13537616",
+      "name": "用户管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e7a0",
+      "unicode_decimal": 59296
+    },
+    {
+      "icon_id": "430695",
+      "name": "用户名",
+      "font_class": "username",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "12323767",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    }
+  ]
+}
