@@ -58,7 +58,7 @@ export default {
             {
               icon: 'el-icon-s-tools',
               title: '角色管理',
-              path: 'users'
+              path: 'role'
             },
             {
               icon: 'el-icon-delete-solid',

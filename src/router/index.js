@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    component: () => import('@/views/Index')
   },
   {
     path: '/login',
@@ -21,8 +21,12 @@ const routes = [
         component: () => import('@/views/admin/Welcome')
       },
       {
-        path: 'users',
-        component: () => import('@/views/users/users')
+        path: 'role',
+        component: () => import('@/views/admin/Role')
+      },
+      {
+        path: 'password',
+        component: () => import('@/views/admin/AdminPassword')
       }
     ]
   }
