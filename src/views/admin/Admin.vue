@@ -20,7 +20,7 @@
           background-color="#34495e"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-submenu :index="item" v-for="item in AsideListDate" :key="item.id">
+          <el-submenu :index="item.index" v-for="item in AsideListDate" :key="item.id">
             <template slot="title">
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'Home',
   data () {
@@ -52,6 +51,7 @@ export default {
       // 左侧菜单列表数据
       AsideListDate: [
         {
+          index: '1',
           icon: 'el-icon-menu',
           title: '系统管理',
           children: [
@@ -78,18 +78,15 @@ export default {
       // }
     }
   },
-  computed: {
-    ...mapState(['activePath']),
-    collWidth () {
-      return this.isToggleCollapse ? '64px' : '200px'
-    }
-  },
-  created () {
-  },
   methods: {
     // 点击按钮折叠菜单
     toggleCollapse () {
       this.isToggleCollapse = !this.isToggleCollapse
+    }
+  },
+  computed: {
+    collWidth () {
+      return this.isToggleCollapse ? '64px' : '200px'
     }
   }
 }

@@ -62,12 +62,18 @@ export default {
     },
     // 登录按钮事件
     login () {
+      this.$refs.loginFormRef.validate(bool => {
+        if (bool) {
+
+        } else {
+          this.$message.warning('请正确输入')
+        }
+      })
       const length = this.loginForm.password.length
       console.log(length)
       var length1 = this.loginForm.username.length
       console.log(length1)
       if (length < 6 || length1 < 3) {
-        this.$message.warning('请正确输入')
       } else {
         const temp = {
           username: this.loginForm.username,
