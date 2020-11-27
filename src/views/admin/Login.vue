@@ -62,40 +62,25 @@ export default {
     },
     // 登录按钮事件
     login () {
+      console.log(this.loginForm)
       this.$refs.loginFormRef.validate(bool => {
         if (bool) {
-
+          this.$axios.post('admin/query', this.loginForm)
+            .then((response) => {
+              const temp = response.data
+              console.log(temp)
+              if (temp.code === 200) {
+                sessionStorage.setItem('admin', temp.data)
+                this.$message.success('登陆成功')
+                this.$router.push('/admin')
+              } else {
+                this.$message.error('用户名或密码错误')
+              }
+            })
         } else {
           this.$message.warning('请正确输入')
         }
       })
-      const length = this.loginForm.password.length
-      console.log(length)
-      var length1 = this.loginForm.username.length
-      console.log(length1)
-      if (length < 6 || length1 < 3) {
-      } else {
-        const temp = {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        }
-        this.$axios.post('admin/checkUser', temp, {
-          headers: {
-            'Content-Type': 'text/plain;charset=UTF-8'
-          }
-        })
-          .then((response) => {
-            const temp = response.data
-            console.log(temp)
-            if (temp.code === 200) {
-              sessionStorage.setItem('admin', temp.data.username)
-              this.$message.success('登陆成功')
-              this.$router.push('/admin')
-            } else {
-              this.$message.error('用户名或密码错误')
-            }
-          })
-      }
     }
   }
 }
