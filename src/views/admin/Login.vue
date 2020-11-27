@@ -68,7 +68,6 @@ export default {
           this.$axios.post('login/query', this.loginForm)
             .then((response) => {
               const temp = response.data
-              console.log(temp)
               if (temp.code === 200) {
                 // sessionStorage.setItem('user', 'ROLE:' + temp.data.role.name + '_' + temp.data.username)
                 sessionStorage.setItem('user', JSON.stringify(temp.data))
