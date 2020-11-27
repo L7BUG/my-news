@@ -12,15 +12,8 @@ export default {
   name: 'Index',
   methods: {
     test () {
-      const c = {
-        username: 'admin',
-        password: '123456'
-      }
-
-      this.$axios.post('admin/postJSON', c, {
-        headers: {
-          'Content-Type': 'text/plain;charset=UTF-8'
-        }
+      this.$axios.post('test', {
+        name: 123
       }).then(response => {
         console.log(response.data)
       })

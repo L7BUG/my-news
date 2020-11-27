@@ -27,9 +27,9 @@ import {
   Tag,
   Tree,
   Select,
-  Option
+  Option,
+  Notification
 } from 'element-ui'
-
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Tree)
@@ -58,3 +58,4 @@ Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$notify = Notification
