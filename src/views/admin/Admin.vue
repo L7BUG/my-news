@@ -2,7 +2,7 @@
   <el-container class="home_container">
     <el-header>
       <div>
-        <h2>电商后台管理系统</h2>
+        <h2>老陆头条管理系统</h2>
       </div>
       <el-button type="info">退出</el-button>
     </el-header>

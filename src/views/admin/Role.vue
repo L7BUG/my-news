@@ -40,15 +40,10 @@
         </el-table-column>
 
         <el-table-column
-          width="210"
+          width="150"
           label="角色操作"
           show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="info"
-              @click="viewRow(scope.row)">查看
-            </el-button>
             <el-button
               size="mini"
               type="primary"
@@ -131,14 +126,35 @@ export default {
         }
       })
     },
-    viewRow (row) {
-      console.log(row)
-    },
     editRow (row) {
       console.log(row)
     },
     deleteRow (row) {
       console.log(row)
+      this.$confirm('是否删除？', '提示')
+        .then(_ => {
+          this.$axios.delete('role/delete/' + row.id)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.initPage()
+                this.$notify.success({
+                  title: '删除成功',
+                  message: resp.data.message
+                })
+              } else {
+                this.$notify.warning({
+                  title: '删除失败',
+                  message: resp.data.message
+                })
+              }
+            })
+        })
+        .catch(_ => {
+          this.$notify.info({
+            title: '取消删除',
+            message: row.name
+          })
+        })
     },
     initPage () {
       this.$axios.get('role/queryAll')
