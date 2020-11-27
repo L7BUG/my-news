@@ -45,6 +45,7 @@
           show-overflow-tooltip>
           <template slot-scope="scope">
             <el-button
+              :disabled="scope.id === 1"
               size="mini"
               type="primary"
               @click="editRow(scope.row)">编辑
@@ -74,6 +75,21 @@
         <el-button type="primary" @click="addRole(addForm)">确 定</el-button>
       </div>
     </el-dialog>
+    <!--    编辑角色弹框-->
+    <el-dialog title="编辑角色" :visible.sync="dialogUpdateRole">
+      <el-form :model="updateForm" ref="addForm">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="updateForm.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="角色说明">
+          <el-input v-model="updateForm.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateRole = false">取 消</el-button>
+        <el-button type="primary" @click="updateRole(updateForm)">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -86,7 +102,14 @@ export default {
       multipleSelection: [],
       // 添加角色
       dialogAddRole: false,
+      // 更新角色
+      dialogUpdateRole: false,
+      updateForm: {
+        name: '',
+        remark: ''
+      },
       addForm: {
+        id: '',
         name: '',
         remark: ''
       },
@@ -112,11 +135,12 @@ export default {
                   title: '添加成功',
                   message: resp.data.code
                 })
+                this.$refs.addForm.resetFields()
                 this.initPage()
               } else {
                 this.$notify.warning({
                   title: '添加失败',
-                  message: resp.data.code
+                  message: resp.data.message
                 })
               }
             })
@@ -127,7 +151,29 @@ export default {
       })
     },
     editRow (row) {
-      console.log(row)
+      this.dialogUpdateRole = true
+      this.updateForm.name = row.name
+      this.updateForm.id = row.id
+      this.updateForm.remark = row.remark
+    },
+    updateRole (role) {
+      console.log(role)
+      this.$axios.put('role/update', role)
+        .then(resp => {
+          if (resp.data.code === 200) {
+            this.$notify.success({
+              title: '成功',
+              message: resp.data.message
+            })
+            this.initPage()
+          } else {
+            this.$notify.error({
+              title: '失败',
+              message: resp.data.message
+            })
+          }
+        })
+      this.dialogUpdateRole = false
     },
     deleteRow (row) {
       console.log(row)
