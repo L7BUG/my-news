@@ -70,7 +70,8 @@ export default {
               const temp = response.data
               console.log(temp)
               if (temp.code === 200) {
-                sessionStorage.setItem('admin', temp.data)
+                // sessionStorage.setItem('user', 'ROLE:' + temp.data.role.name + '_' + temp.data.username)
+                sessionStorage.setItem('user', JSON.stringify(temp.data))
                 this.$message.success('登陆成功')
                 this.$router.push('/admin')
               } else {

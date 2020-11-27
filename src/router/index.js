@@ -39,7 +39,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === '/login' || to.path === '/') return next()
   // 拿到token判断是否具有token
-  const token = window.sessionStorage.getItem('admin')
+  const token = window.sessionStorage.getItem('user')
   if (!token) return next('/login')
   next()
 })
