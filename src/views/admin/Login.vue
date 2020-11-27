@@ -65,7 +65,7 @@ export default {
       console.log(this.loginForm)
       this.$refs.loginFormRef.validate(bool => {
         if (bool) {
-          this.$axios.post('admin/query', this.loginForm)
+          this.$axios.post('login/query', this.loginForm)
             .then((response) => {
               const temp = response.data
               console.log(temp)
