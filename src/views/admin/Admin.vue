@@ -52,18 +52,30 @@ export default {
       AsideListDate: [
         {
           index: '1',
-          icon: 'el-icon-menu',
+          icon: 'el-icon-setting',
           title: '系统管理',
           children: [
             {
-              icon: 'el-icon-s-tools',
+              icon: 'el-icon-s-check',
               title: '角色管理',
               path: 'role'
             },
             {
-              icon: 'el-icon-delete-solid',
+              icon: 'el-icon-edit',
               title: '修改密码',
               path: 'password'
+            }
+          ]
+        },
+        {
+          index: '2',
+          icon: 'el-icon-s-custom',
+          title: '用户管理',
+          children: [
+            {
+              icon: 'el-icon-user',
+              title: '用户列表',
+              path: 'users'
             }
           ]
         }
