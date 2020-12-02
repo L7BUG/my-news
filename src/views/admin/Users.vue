@@ -122,7 +122,7 @@
           <el-input v-model="addUserForm.username" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="addUserForm.password" type="password" clearable></el-input>
+          <el-input v-model="addUserForm.password" type="password" clearable show-password></el-input>
         </el-form-item>
         <el-form-item label="所属角色" prop="role.id">
           <el-select v-model="addUserForm.role.id" clearable placeholder="请选择">
@@ -148,10 +148,10 @@
     <el-dialog title="修改" :visible.sync="dialogUpdateUser">
       <el-form :model="updateUserForm" :rules="updateUserRules" ref="updateForm">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="updateUserForm.username" clearable></el-input>
+          <el-input v-model="updateUserForm.username" clearable disabled></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="updateUserForm.password" type="password" clearable></el-input>
+          <el-input v-model="updateUserForm.password" type="password" clearable show-password></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="">
           <el-select v-model="updateUserForm.status" clearable placeholder="状态">
