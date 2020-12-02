@@ -9,6 +9,7 @@
     <el-card>
       <el-row>
         <el-button type="success" icon="el-icon-search" plain size="mini">添加用户</el-button>
+        <el-button type="warning" icon="el-icon-delete" plain size="mini" @click="deleteUser(users)">删除用户</el-button>
       </el-row>
 <!--      搜索区域-->
       <el-row>
@@ -35,6 +36,7 @@
       <el-table
         border
         ref="multipleTable"
+        @selection-change="selectionChange"
         :data="tableData.data"
         tooltip-effect="dark"
         style="width: 100%">
@@ -92,7 +94,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="deleteRow(scope.row)">删除
+              @click="deleteRow(scope.row.id)">删除
             </el-button>
           </template>
         </el-table-column>
@@ -137,6 +139,7 @@ export default {
         // 总数
         maxPageNumber: null
       },
+      // 查询条件
       selectForm: {
         username: null,
         role: {
@@ -153,11 +156,16 @@ export default {
         // 每页显示
         pageShowNumber: 5
       },
+      // 角色
       roles: [
+      ],
+      users: [
+
       ]
     }
   },
   methods: {
+    // 查询
     select (selectForm) {
       this.$axios.post('user/query/' + this.tableData.page, selectForm)
         .then(resp => {
@@ -189,15 +197,58 @@ export default {
     editRow (row) {
 
     },
-    deleteRow (row) {
+    deleteRow (id) {
+      this.$axios.delete('user/delete/' + id)
+        .then(resp => {
+          if (resp.data.code === 200) {
+            this.$notify.success({
+              title: '成功' + resp.data.code,
+              message: resp.data.message
+            })
+            this.select(this.selectForm)
+          } else {
+            this.$notify.error({
+              title: '失败' + resp.data.code,
+              message: resp.data.message
+            })
+          }
+        })
+    },
+    // 用户勾选单选框的事件
+    selectionChange (selection) {
+      this.users = selection
+      console.log(this.users)
+    },
 
+    deleteUser (users) {
+      const t = JSON.stringify(users)
+      console.log(t)
+      this.$axios.post('user/delete', users)
+        .then(resp => {
+          if (resp.data.code === 200) {
+            this.$notify.success({
+              dangerouslyUseHTMLString: true,
+              title: '成功' + resp.data.code,
+              message: resp.data.message
+            })
+            this.select(this.selectForm)
+          } else {
+            this.$notify.error({
+              dangerouslyUseHTMLString: true,
+              title: '失败' + resp.data.code,
+              message: resp.data.message
+            })
+          }
+        })
     }
   },
   created () {
+    // 获得所有权限信息
     this.$axios.get('role/queryAll')
       .then(resp => {
         this.roles = resp.data.data
       })
+    // 默认查询第一页
     this.select(this.selectForm)
   }
 }
