@@ -279,25 +279,27 @@ export default {
     },
 
     deleteUser (users) {
-      const t = JSON.stringify(users)
-      console.log(t)
-      this.$axios.post('user/delete', users)
-        .then(resp => {
-          if (resp.data.code === 200) {
-            this.$notify.success({
-              dangerouslyUseHTMLString: true,
-              title: '成功' + resp.data.code,
-              message: resp.data.message
-            })
-            this.select(this.selectForm)
-          } else {
-            this.$notify.error({
-              dangerouslyUseHTMLString: true,
-              title: '失败' + resp.data.code,
-              message: resp.data.message
-            })
-          }
-        })
+      if (users.length > 0) {
+        this.$axios.post('user/delete', users)
+          .then(resp => {
+            if (resp.data.code === 200) {
+              this.$notify.success({
+                dangerouslyUseHTMLString: true,
+                title: '成功' + resp.data.code,
+                message: resp.data.message
+              })
+              this.select(this.selectForm)
+            } else {
+              this.$notify.error({
+                dangerouslyUseHTMLString: true,
+                title: '失败' + resp.data.code,
+                message: resp.data.message
+              })
+            }
+          })
+      } else {
+        this.$message.warning('请选择！')
+      }
     },
     // 添加用户
     addUser () {
