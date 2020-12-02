@@ -8,7 +8,7 @@
     </el-breadcrumb>
     <el-card>
       <el-row>
-        <el-button type="success" icon="el-icon-search" plain size="mini">添加用户</el-button>
+        <el-button type="success" icon="el-icon-search" plain size="mini" @click="dialogAddUser = true">添加用户</el-button>
         <el-button type="warning" icon="el-icon-delete" plain size="mini" @click="deleteUser(users)">删除用户</el-button>
       </el-row>
 <!--      搜索区域-->
@@ -67,7 +67,7 @@
         <el-table-column
           label="状态"
           width="120">
-          <template slot-scope="scope">{{ scope.row.status }}</template>
+          <template slot-scope="scope">{{ scope.row.status===1? '启用': '注销' }}</template>
         </el-table-column>
 
         <el-table-column
@@ -89,10 +89,12 @@
             <el-button
               size="mini"
               type="primary"
+              :disabled="scope.row.id === 1"
               @click="editRow(scope.row)">编辑
             </el-button>
             <el-button
               size="mini"
+              :disabled="scope.row.id === 1"
               type="danger"
               @click="deleteRow(scope.row.id)">删除
             </el-button>
@@ -112,6 +114,22 @@
         </el-pagination>
       </el-row>
     </el-card>
+
+    <!--      添加用户弹框-->
+    <el-dialog title="添加用户" :visible.sync="dialogAddUser">
+      <el-form :model="addUserForm" :rules="addUserRules" ref="addForm">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addUserForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addUserForm.password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAddUser = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -160,6 +178,20 @@ export default {
       roles: [
       ],
       users: [
+
+      ],
+      dialogAddUser: false,
+      // 添加用户表单
+      addUserForm: {
+        username: '',
+        password: '',
+        tel: null,
+        role: {
+          id: null
+        }
+      },
+      // 添加用户校验条件
+      addUserRules: [
 
       ]
     }
@@ -255,5 +287,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
