@@ -119,15 +119,28 @@
     <el-dialog title="添加用户" :visible.sync="dialogAddUser">
       <el-form :model="addUserForm" :rules="addUserRules" ref="addForm">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="addUserForm.username"></el-input>
+          <el-input v-model="addUserForm.username" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="addUserForm.password"></el-input>
+          <el-input v-model="addUserForm.password" type="password" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="所属角色" prop="role.id">
+          <el-select v-model="addUserForm.role.id" clearable placeholder="请选择">
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="电话" prop="tel">
+          <el-input v-model="addUserForm.tel" clearable type="number" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddUser = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="addUser()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -191,9 +204,22 @@ export default {
         }
       },
       // 添加用户校验条件
-      addUserRules: [
+      addUserRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6到 15 个字符', trigger: 'blur' }
+        ],
+        role: {
+          id: [
+            { required: true, message: '请选择角色', trigger: 'change' }
+          ]
+        }
+      }
 
-      ]
     }
   },
   methods: {
@@ -272,6 +298,33 @@ export default {
             })
           }
         })
+    },
+    // 添加用户
+    addUser () {
+      this.$refs.addForm.validate(bool => {
+        if (bool) {
+          this.$axios.post('user/add', this.addUserForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                console.log(resp.data)
+                this.$notify.success({
+                  title: '添加成功' + resp.data.code,
+                  message: resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '添加失败' + resp.data.code,
+                  message: resp.data.message
+                })
+              }
+            })
+          this.dialogAddUser = false
+          this.$refs.addForm.resetFields()
+        } else {
+          this.$message.error('请正确输入!')
+        }
+      })
     }
   },
   created () {
