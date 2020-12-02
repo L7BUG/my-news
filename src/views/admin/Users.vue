@@ -143,6 +143,45 @@
         <el-button type="primary" @click="addUser()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--      修改用户用户弹框-->
+    <el-dialog title="修改" :visible.sync="dialogUpdateUser">
+      <el-form :model="updateUserForm" :rules="updateUserRules" ref="updateForm">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="updateUserForm.username" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="updateUserForm.password" type="password" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="">
+          <el-select v-model="updateUserForm.status" clearable placeholder="状态">
+            <el-option
+              v-for="item in statusList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属角色" prop="role.id">
+          <el-select v-model="updateUserForm.role.id" clearable placeholder="请选择">
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="电话" prop="tel">
+          <el-input v-model="updateUserForm.tel" clearable type="number" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateUser = false">取 消</el-button>
+        <el-button type="primary" @click="updateUser()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -218,8 +257,42 @@ export default {
             { required: true, message: '请选择角色', trigger: 'change' }
           ]
         }
-      }
-
+      },
+      // 修改用户
+      dialogUpdateUser: false,
+      updateUserForm: {
+        username: '',
+        password: '',
+        tel: null,
+        role: {
+          id: null
+        }
+      },
+      updateUserRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6到 15 个字符', trigger: 'blur' }
+        ],
+        role: {
+          id: [
+            { required: true, message: '请选择角色', trigger: 'change' }
+          ]
+        }
+      },
+      statusList: [
+        {
+          id: 1,
+          name: '启用'
+        },
+        {
+          id: 2,
+          name: '注销'
+        }
+      ]
     }
   },
   methods: {
@@ -253,7 +326,8 @@ export default {
       this.select(this.selectForm)
     },
     editRow (row) {
-
+      this.updateUserForm = JSON.parse(JSON.stringify(row))
+      this.dialogUpdateUser = true
     },
     deleteRow (id) {
       this.$axios.delete('user/delete/' + id)
@@ -325,6 +399,30 @@ export default {
           this.$refs.addForm.resetFields()
         } else {
           this.$message.error('请正确输入!')
+        }
+      })
+    },
+    updateUser () {
+      this.$refs.updateForm.validate(bool => {
+        if (bool) {
+          this.$axios.put('user/update', this.updateUserForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '成功' + resp.data.code,
+                  message: resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '失败' + resp.data.code,
+                  message: resp.data.message
+                })
+              }
+            })
+          this.dialogUpdateUser = false
+        } else {
+          this.$message.warning('请正确输入')
         }
       })
     }
