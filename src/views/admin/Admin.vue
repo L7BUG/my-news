@@ -87,7 +87,7 @@ export default {
             {
               icon: 'el-icon-collection-tag',
               title: '类别管理',
-              path: ''
+              path: 'newTag'
             },
             {
               icon: 'el-icon-files',

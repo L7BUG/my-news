@@ -31,6 +31,10 @@ const routes = [
       {
         path: 'users',
         component: () => import('@/views/admin/Users')
+      },
+      {
+        path: 'newTag',
+        component: () => import('@/views/admin/newTag')
       }
     ]
   }
