@@ -13,15 +13,15 @@
       </el-row>
       <!--      搜索区域-->
       <el-row>
-        <el-form :inline="true" :model="selectForm" class="demo-form-inline">
+        <el-form :inline="true" :model="selectTemp" class="demo-form-inline">
           <el-form-item label="新闻名">
-            <el-input v-model="selectForm.title" placeholder="新闻名" size="mini" clearable></el-input>
+            <el-input v-model="selectTemp.title" placeholder="新闻名" size="mini" clearable></el-input>
           </el-form-item>
           <el-form-item label="用户id">
-            <el-input type="number" v-model="selectForm.user.id" placeholder="用户id" size="mini" clearable></el-input>
+            <el-input type="number" v-model="selectTemp.user.id" placeholder="用户id" size="mini" clearable></el-input>
           </el-form-item>
           <el-form-item label="新闻类别">
-            <el-select v-model="selectForm.category.id" clearable placeholder="请选择" size="mini">
+            <el-select v-model="selectTemp.category.id" clearable placeholder="请选择" size="mini">
               <el-option
                 v-for="item in categorys"
                 :key="item.id"
@@ -31,7 +31,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="succ ess" size="mini" icon="el-icon-search" plain @click="select(selectForm)">搜索</el-button>
+            <el-button type="succ ess" size="mini" icon="el-icon-search" plain @click="selectClick()">搜索</el-button>
           </el-form-item>
         </el-form>
       </el-row>
@@ -180,11 +180,20 @@ export default {
           }
         })
     },
+    selectClick () {
+      this.selectForm.title = this.selectTemp.title
+      this.selectForm.category = this.selectTemp.category
+      this.selectForm.user = this.selectTemp.user
+      console.log(this.selectForm)
+      this.select(this.selectForm)
+    },
     setPageShowNumber (val) {
       this.selectForm.pageShowNumber = val
+      this.select(this.selectForm)
     },
     handleCurrentChange (val) {
       this.tableData.page = val
+      this.select(this.selectForm)
     },
     // 用户勾选单选框的事件
     selectionChange (selection) {
