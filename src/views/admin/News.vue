@@ -38,82 +38,77 @@
 
       <el-table
         border
-        ref="multipleTable"
-        @selection-change="this.selectionChange"
+        @selection-change="selectionChange"
         :data="tableData.data"
         tooltip-effect="dark"
         style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="新闻 ID:">
+                <span>{{ props.row.id }}</span>
+              </el-form-item>
+            </el-form>
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="内容:">
+                <span>{{ props.row.content }}</span>
+              </el-form-item>
+            </el-form>
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="浏览次数:">
+                <span>{{ props.row.clicks }}</span>
+              </el-form-item>
+            </el-form>
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="状态:">
+                <span>{{ props.row.publishStatus === '1' ? '发布' : '删除' }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
 
         <el-table-column
           type="selection"
           width="55">
         </el-table-column>
-
-        <el-table-column
-          prop="id"
-          label="新闻id"
-          width="70">
-        </el-table-column>
-
         <el-table-column
           label="新闻标题"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.title }}</template>
+          prop="title">
         </el-table-column>
         <el-table-column
-          label="新闻内容">
-          <template slot-scope="scope">{{ scope.row.content }}</template>
+          label="作者"
+          prop="user.username">
         </el-table-column>
-
         <el-table-column
-          label="所属类别"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.category.name}}</template>
+          width="100"
+          label="新闻类别"
+          prop="category.name">
         </el-table-column>
-
         <el-table-column
-          label="发表用户"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.user.username }}</template>
-        </el-table-column>
-
-        <el-table-column
-          label="访问量"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.clicks }}</template>
-        </el-table-column>
-
-        <el-table-column
-          label="状态"
-          width="120">
-          <template slot-scope="scope">{{ scope.row.publishStatus === '1' ? '发布' : '删除' }}</template>
-        </el-table-column>
-
-        <el-table-column
-          prop="publishTime"
-          width="120"
+          width="160"
           label="发布时间">
+          <template slot-scope="scope">
+            {{new Date(scope.row.publishTime).toLocaleString()}}
+          </template>
         </el-table-column>
 
         <el-table-column
           width="150"
           label="角色操作"
           show-overflow-tooltip>
-          <template slot-scope="scope">
+          <template slot-scope="">
             <el-button
               size="mini"
-              type="primary"
-              @click="editRow(scope.row)">编辑
+              type="primary">编辑
             </el-button>
             <el-button
               size="mini"
-              type="danger"
-              @click="deleteRow(scope.row.id)">删除
+              type="danger">删除
             </el-button>
           </template>
         </el-table-column>
-
       </el-table>
+
       <el-row>
         <el-pagination
           @size-change="setPageShowNumber"
@@ -215,6 +210,17 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>
