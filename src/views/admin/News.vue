@@ -8,8 +8,8 @@
     </el-breadcrumb>
     <el-card>
       <el-row>
-        <el-button type="success" icon="el-icon-search" plain size="mini">增加新闻</el-button>
-        <el-button type="warning" icon="el-icon-delete" plain size="mini">删除新闻</el-button>
+        <el-button type="success" icon="el-icon-search" plain size="mini" @click="dialogAddNew = true">增加新闻</el-button>
+        <el-button type="warning" icon="el-icon-delete" plain size="mini" @click="deleteNews()">删除新闻</el-button>
       </el-row>
       <!--      搜索区域-->
       <el-row>
@@ -103,7 +103,7 @@
             </el-button>
             <el-button
               size="mini"
-              @click="deleteRow(scope.row)"
+              @click="deleteRow(scope.row.id)"
               type="danger">删除
             </el-button>
           </template>
@@ -122,6 +122,34 @@
         </el-pagination>
       </el-row>
     </el-card>
+    <!--      添加新闻弹框-->
+    <el-dialog title="添加用户" :visible.sync="dialogAddNew">
+      <el-form :model="addForm" :rules="addRules" ref="addForm">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="addForm.title" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="所属类别" prop="category.id">
+          <el-select v-model="addForm.category.id" clearable placeholder="请选择">
+            <el-option
+              v-for="item in categorys"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户id" prop="user.id">
+          <el-input v-model="addForm.user.id" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="addForm.content" clearable type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAddNew = false">取 消</el-button>
+        <el-button type="primary" @click="addNew()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -166,7 +194,39 @@ export default {
           id: 1,
           name: '假数据'
         }
-      ]
+      ],
+      selection: null,
+      dialogAddNew: false,
+      addForm: {
+        title: null,
+        category: {
+          id: null
+        },
+        user: {
+          id: null
+        },
+        content: null
+      },
+      addRules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        category: {
+          id: [
+            { required: true, message: '请选择类别', trigger: 'change' }
+          ]
+        },
+        user: {
+          id: [
+            { required: true, message: '请输入用户id', trigger: 'blur' }
+          ]
+        },
+        content: [
+          { required: true, message: '请输入内容', trigger: 'blur' },
+          { min: 3, message: '最少三个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -198,15 +258,16 @@ export default {
     },
     // 用户勾选单选框的事件
     selectionChange (selection) {
+      this.selection = selection
       console.log(selection)
     },
     editRow (row) {
 
     },
-    deleteRow (row) {
+    deleteRow (id) {
       this.$confirm('是否删除？此操作会删除相关评论信息', '警告！')
         .then(_ => {
-          this.$axios.delete('new/delete/' + row.id)
+          this.$axios.delete('new/delete/' + id)
             .then(resp => {
               if (resp.data.code === 200) {
                 this.$notify.success({
@@ -224,10 +285,65 @@ export default {
         })
         .catch(_ => {
           this.$notify.info({
-            title: '取消删除',
-            message: row.name
+            title: '取消删除'
           })
         })
+    },
+    deleteNews () {
+      if (!this.selection) return
+      console.log(this.selection)
+      this.$confirm('是否删除？此操作会删除相关评论信息', '警告！')
+        .then(_ => {
+          this.$axios.delete('new/delete', {
+            data: this.selection
+          })
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '删除成功' + resp.data.code,
+                  message: resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '删除失败' + resp.data.code,
+                  message: resp.data.message
+                })
+              }
+              this.selection = null
+              this.select(this.selectForm)
+            })
+        })
+        .catch(_ => {
+          this.$notify.info({
+            title: '取消删除'
+          })
+        })
+    },
+    addNew () {
+      this.$refs.addForm.validate(bool => {
+        if (bool) {
+          this.$axios.post('new/add', this.addForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '新增成功:' + resp.data.code,
+                  message: resp.data.message
+                })
+                this.$refs.addForm.resetFields()
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '新增失败:' + resp.data.code,
+                  message: resp.data.message
+                })
+              }
+            })
+          this.dialogAddNew = false
+        } else {
+          this.$message.error('请正确输入')
+        }
+      })
     }
   },
   created () {
