@@ -92,7 +92,7 @@ export default {
             {
               icon: 'el-icon-files',
               title: '查看新闻',
-              path: ''
+              path: 'news'
             }
           ]
         },
