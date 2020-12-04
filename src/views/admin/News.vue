@@ -96,13 +96,14 @@
           width="150"
           label="角色操作"
           show-overflow-tooltip>
-          <template slot-scope="">
+          <template slot-scope="scope">
             <el-button
               size="mini"
               type="primary">编辑
             </el-button>
             <el-button
               size="mini"
+              @click="deleteRow(scope.row)"
               type="danger">删除
             </el-button>
           </template>
@@ -203,7 +204,30 @@ export default {
 
     },
     deleteRow (row) {
-
+      this.$confirm('是否删除？此操作会删除相关评论信息', '警告！')
+        .then(_ => {
+          this.$axios.delete('new/delete/' + row.id)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '删除成功' + resp.data.code,
+                  message: resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '删除失败' + resp.data.code,
+                  message: resp.data.message
+                })
+              }
+            })
+        })
+        .catch(_ => {
+          this.$notify.info({
+            title: '取消删除',
+            message: row.name
+          })
+        })
     }
   },
   created () {
