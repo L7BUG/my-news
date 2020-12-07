@@ -321,13 +321,13 @@ export default {
       ).then(resp => {
         if (resp.data.code === 200) {
           this.$notify.success({
-            title: '批量删除成功!code:' + resp.data.code,
+            title: '成功!code:' + resp.data.code,
             message: 'message:' + resp.data.message
           })
           this.select(this.selectForm)
         } else {
           this.$notify.warning({
-            title: '批量删除失败!code:' + resp.data.code,
+            title: '失败!code:' + resp.data.code,
             message: 'message:' + resp.data.message
           })
         }
