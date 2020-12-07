@@ -152,7 +152,7 @@
       </div>
     </el-dialog>
 <!--    修改新闻弹框-->
-    <el-dialog title="修改用户" :visible.sync="dialogUpdate">
+    <el-dialog title="修改新闻" :visible.sync="dialogUpdate">
       <el-form :model="updateForm" :rules="addRules" ref="updateForm">
         <el-form-item label="标题" prop="title">
           <el-input v-model="updateForm.title" clearable></el-input>
