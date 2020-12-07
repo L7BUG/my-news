@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/Index')
+    component: () => import('@/views/admin/Login')
   },
   {
     path: '/login',
@@ -61,7 +61,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   routes
 })
 router.beforeEach((to, from, next) => {

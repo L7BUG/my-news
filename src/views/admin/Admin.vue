@@ -4,7 +4,7 @@
       <div>
         <h2>老陆头条管理系统</h2>
       </div>
-      <el-button type="info">退出</el-button>
+      <el-button type="info" @click="exit()">退出</el-button>
     </el-header>
     <el-container>
 <!--      侧边栏-->
@@ -46,6 +46,7 @@ export default {
   name: 'Home',
   data () {
     return {
+      myUser: JSON.parse(sessionStorage.getItem('user')),
       // 是否折叠菜单
       isToggleCollapse: false,
       // 左侧菜单列表数据
@@ -145,11 +146,127 @@ export default {
     // 点击按钮折叠菜单
     toggleCollapse () {
       this.isToggleCollapse = !this.isToggleCollapse
+    },
+    exit () {
+      sessionStorage.removeItem('user')
+      this.$router.push('/login')
+      this.$message.info('退出登陆')
     }
   },
   computed: {
     collWidth () {
       return this.isToggleCollapse ? '64px' : '200px'
+    }
+  },
+  created () {
+    if (this.myUser.role.id === 1) {
+      this.AsideListDate = [
+        {
+          index: '1',
+          icon: 'el-icon-setting',
+          title: '系统管理',
+          children: [
+            {
+              icon: 'el-icon-s-check',
+              title: '角色管理',
+              path: 'role'
+            },
+            {
+              icon: 'el-icon-edit',
+              title: '修改密码',
+              path: 'password'
+            }
+          ]
+        },
+        {
+          index: '2',
+          icon: 'el-icon-s-custom',
+          title: '用户管理',
+          children: [
+            {
+              icon: 'el-icon-user',
+              title: '用户列表',
+              path: 'users'
+            }
+          ]
+        },
+        {
+          index: '3',
+          icon: 'el-icon-notebook-2',
+          title: '新闻管理',
+          children: [
+            {
+              icon: 'el-icon-collection-tag',
+              title: '类别管理',
+              path: 'newTag'
+            },
+            {
+              icon: 'el-icon-files',
+              title: '查看新闻',
+              path: 'news'
+            }
+          ]
+        },
+        {
+          index: '4',
+          icon: 'el-icon-chat-line-square',
+          title: '评论管理',
+          children: [
+            {
+              icon: 'el-icon-chat-square',
+              title: '查看评论',
+              path: 'comment'
+            }
+          ]
+        },
+        {
+          index: '5',
+          icon: 'el-icon-document-copy',
+          title: '个人管理',
+          children: [
+            {
+              icon: 'el-icon-collection',
+              title: '我发布的',
+              path: 'myPush'
+            },
+            {
+              icon: 'el-icon-edit',
+              title: '发布文章',
+              path: 'push'
+            },
+            {
+              icon: 'el-icon-chat-dot-round',
+              title: '我的评论',
+              path: 'myComment'
+            }
+          ]
+        }
+      ]
+    } else if (this.myUser.role.id === 2) {
+      this.AsideListDate = [
+        {
+          index: '5',
+          icon: 'el-icon-document-copy',
+          title: '个人管理',
+          children: [
+            {
+              icon: 'el-icon-collection',
+              title: '我发布的',
+              path: 'myPush'
+            },
+            {
+              icon: 'el-icon-edit',
+              title: '发布文章',
+              path: 'push'
+            },
+            {
+              icon: 'el-icon-chat-dot-round',
+              title: '我的评论',
+              path: 'myComment'
+            }
+          ]
+        }
+      ]
     }
   }
 }
