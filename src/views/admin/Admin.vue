@@ -111,17 +111,22 @@ export default {
         {
           index: '5',
           icon: 'el-icon-document-copy',
-          title: '文章管理',
+          title: '个人管理',
           children: [
             {
               icon: 'el-icon-collection',
               title: '我发布的',
-              path: ''
+              path: 'myPush'
             },
             {
               icon: 'el-icon-edit',
               title: '发布文章',
-              path: ''
+              path: 'push'
+            },
+            {
+              icon: 'el-icon-chat-dot-round',
+              title: '我的评论',
+              path: 'myComment'
             }
           ]
         }

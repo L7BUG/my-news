@@ -43,6 +43,18 @@ const routes = [
       {
         path: 'comment',
         component: () => import('@/views/admin/Comment')
+      },
+      {
+        path: 'myPush',
+        component: () => import('@/views/admin/MyPush')
+      },
+      {
+        path: 'push',
+        component: () => import('@/views/admin/Push')
+      },
+      {
+        path: 'myComment',
+        component: () => import('@/views/admin/MyComment')
       }
     ]
   }
