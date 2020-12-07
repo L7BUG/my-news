@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column
           label="新闻标题"
-          prop="mNew.title">
+          prop="mnew.title">
         </el-table-column>
         <el-table-column
           width="160"
@@ -146,6 +146,16 @@ export default {
     }
   },
   methods: {
+    select (selectForm) {
+      this.$axios.post('comment/query/' + this.tableData.page, selectForm)
+        .then(resp => {
+          if (resp.data.code === 200) {
+            console.log(resp.data)
+            this.tableData.data = resp.data.data.data
+            this.tableData.maxPageNumber = resp.data.data.maxPageNumber
+          }
+        })
+    },
     selectionChange (selection) {
       console.log(selection)
     },
@@ -157,15 +167,18 @@ export default {
     },
     setPageShowNumber (val) {
       this.selectForm.pageShowNumber = val
-      console.log(val)
+      this.select(this.selectForm)
     },
     handleCurrentChange (val) {
       this.tableData.page = val
-      console.log(val)
+      this.select(this.selectForm)
     },
     selectClick () {
       console.log('搜索')
     }
+  },
+  created () {
+    this.select(this.selectForm)
   }
 }
 </script>
