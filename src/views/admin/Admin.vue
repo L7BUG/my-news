@@ -104,7 +104,7 @@ export default {
             {
               icon: 'el-icon-chat-square',
               title: '查看评论',
-              path: ''
+              path: 'comment'
             }
           ]
         },
