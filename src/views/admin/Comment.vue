@@ -8,8 +8,8 @@
     </el-breadcrumb>
     <el-card>
       <el-row>
-        <el-button type="success" icon="el-icon-search" plain size="mini">增加评论</el-button>
-        <el-button type="warning" icon="el-icon-delete" plain size="mini">删除评论</el-button>
+        <el-button type="success" icon="el-icon-search" plain size="mini" @click="dialogAdd = true">增加评论</el-button>
+        <el-button type="warning" icon="el-icon-delete" plain size="mini" @click="deleteSelection()">删除评论</el-button>
       </el-row>
       <!--      搜索区域-->
       <el-row>
@@ -96,6 +96,41 @@
         </el-pagination>
       </el-row>
     </el-card>
+    <!--      添加评论弹框-->
+    <el-dialog title="添加评论" :visible.sync="dialogAdd">
+      <el-form :model="addForm" :rules="addRules" ref="addForm">
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="addForm.content" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="用户id" prop="user.id">
+          <el-input v-model="addForm.user.id" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="新闻id" prop="mNew.id">
+          <el-input v-model="addForm.mNew.id" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogAdd = false">取 消</el-button>
+        <el-button type="primary" @click="addComment()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="修改评论" :visible.sync="dialogUpdate">
+      <el-form :model="updateForm" :rules="addRules" ref="updateForm">
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="updateForm.content" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="用户id" prop="user.id">
+          <el-input v-model="updateForm.user.id" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="新闻id" prop="mNew.id">
+          <el-input v-model="updateForm.mNew.id" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdate = false">取 消</el-button>
+        <el-button type="primary" @click="updateComment()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -137,8 +172,45 @@ export default {
         user: {
           id: null
         }
-      }
-
+      },
+      dialogAdd: false,
+      addForm: {
+        content: null,
+        user: {
+          id: null
+        },
+        mNew: {
+          id: null
+        }
+      },
+      addRules: {
+        content: [
+          { required: true, message: '请输入评论信息', trigger: 'blur' },
+          { min: 2, message: '最少两个字符', trigger: 'blur' }
+        ],
+        user: {
+          id: [
+            { required: true, message: '请输入用户id', trigger: 'change' }
+          ]
+        },
+        mNew: {
+          id: [
+            { required: true, message: '请输入新闻id', trigger: 'change' }
+          ]
+        }
+      },
+      dialogUpdate: false,
+      updateForm: {
+        id: null,
+        content: null,
+        user: {
+          id: null
+        },
+        mNew: {
+          id: null
+        }
+      },
+      selection: null
     }
   },
   methods: {
@@ -153,13 +225,32 @@ export default {
         })
     },
     selectionChange (selection) {
-      console.log(selection)
+      this.selection = selection
     },
     editRow (row) {
       console.log(row)
+      this.dialogUpdate = true
+      this.updateForm.id = row.id
+      this.updateForm.mNew.id = row.mnew.id
+      this.updateForm.content = row.content
+      this.updateForm.user.id = row.user.id
     },
     deleteRow (row) {
-      console.log(row)
+      this.$axios.delete('comment/delete/' + row.id)
+        .then(resp => {
+          if (resp.data.code === 200) {
+            this.$notify.success({
+              title: '删除成功!code:' + resp.data.code,
+              message: 'message:' + resp.data.message
+            })
+            this.select(this.selectForm)
+          } else {
+            this.$notify.warning({
+              title: '删除失败!code:' + resp.data.code,
+              message: 'message:' + resp.data.message
+            })
+          }
+        })
     },
     setPageShowNumber (val) {
       this.selectForm.pageShowNumber = val
@@ -174,6 +265,74 @@ export default {
       this.selectForm.id = this.selectTemp.id
       this.selectForm.user = this.selectTemp.user
       this.select(this.selectForm)
+    },
+    addComment () {
+      this.$refs.addForm.validate(bool => {
+        if (bool) {
+          this.$axios.post('comment/add', this.addForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '添加成功!code:' + resp.data.code,
+                  message: 'message:' + resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '添加失败!code:' + resp.data.code,
+                  message: 'message:' + resp.data.message
+                })
+              }
+              this.dialogAdd = false
+            })
+        } else {
+          this.$message.error('请正确输入')
+        }
+      })
+    },
+    updateComment () {
+      this.$refs.updateForm.validate(bool => {
+        if (bool) {
+          this.$axios.put('comment/update', this.updateForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '修改成功!code:' + resp.data.code,
+                  message: 'message:' + resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '修改失败!code:' + resp.data.code,
+                  message: 'message:' + resp.data.message
+                })
+              }
+              this.dialogUpdate = false
+            })
+        } else {
+          this.$message.error('请正确输入')
+        }
+      })
+    },
+    deleteSelection () {
+      this.$axios.delete('comment/delete', {
+        data: this.selection
+      }
+      ).then(resp => {
+        if (resp.data.code === 200) {
+          this.$notify.success({
+            title: '批量删除成功!code:' + resp.data.code,
+            message: 'message:' + resp.data.message
+          })
+          this.select(this.selectForm)
+        } else {
+          this.$notify.warning({
+            title: '批量删除失败!code:' + resp.data.code,
+            message: 'message:' + resp.data.message
+          })
+        }
+        this.dialogUpdate = false
+      })
     }
   },
   created () {
