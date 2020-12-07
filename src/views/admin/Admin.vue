@@ -78,6 +78,52 @@ export default {
               path: 'users'
             }
           ]
+        },
+        {
+          index: '3',
+          icon: 'el-icon-notebook-2',
+          title: '新闻管理',
+          children: [
+            {
+              icon: 'el-icon-collection-tag',
+              title: '类别管理',
+              path: 'newTag'
+            },
+            {
+              icon: 'el-icon-files',
+              title: '查看新闻',
+              path: 'news'
+            }
+          ]
+        },
+        {
+          index: '4',
+          icon: 'el-icon-chat-line-square',
+          title: '评论管理',
+          children: [
+            {
+              icon: 'el-icon-chat-square',
+              title: '查看评论',
+              path: ''
+            }
+          ]
+        },
+        {
+          index: '5',
+          icon: 'el-icon-document-copy',
+          title: '文章管理',
+          children: [
+            {
+              icon: 'el-icon-collection',
+              title: '我发布的',
+              path: ''
+            },
+            {
+              icon: 'el-icon-edit',
+              title: '发布文章',
+              path: ''
+            }
+          ]
         }
       ]
       // 图标
