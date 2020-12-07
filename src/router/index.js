@@ -5,7 +5,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/Index')
+    redirect: '/login'
+    // component: () => import('@/views/Index')
   },
   {
     path: '/login',
