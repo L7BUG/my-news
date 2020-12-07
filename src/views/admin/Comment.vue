@@ -17,8 +17,8 @@
           <el-form-item label="评论内容">
             <el-input v-model="selectTemp.content" placeholder="内容" size="mini" clearable></el-input>
           </el-form-item>
-          <el-form-item label="新闻id">
-            <el-input type="number" v-model="selectTemp.mNew.id" placeholder="新闻id" size="mini" clearable></el-input>
+          <el-form-item label="评论id">
+            <el-input type="number" v-model="selectTemp.id" placeholder="评论id" size="mini" clearable></el-input>
           </el-form-item>
           <el-form-item label="用户id">
             <el-input type="number" v-model="selectTemp.user.id" placeholder="新闻id" size="mini" clearable></el-input>
@@ -124,9 +124,7 @@ export default {
       // 查询条件
       selectForm: {
         content: null,
-        mNew: {
-          id: null
-        },
+        id: null,
         user: {
           id: null
         },
@@ -135,9 +133,7 @@ export default {
       // 临时查询条件 最后会赋值给 selectForm
       selectTemp: {
         content: null,
-        mNew: {
-          id: null
-        },
+        id: null,
         user: {
           id: null
         }
@@ -174,7 +170,10 @@ export default {
       this.select(this.selectForm)
     },
     selectClick () {
-      console.log('搜索')
+      this.selectForm.content = this.selectTemp.content
+      this.selectForm.id = this.selectTemp.id
+      this.selectForm.user = this.selectTemp.user
+      this.select(this.selectForm)
     }
   },
   created () {
