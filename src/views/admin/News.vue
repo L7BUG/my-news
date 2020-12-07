@@ -99,6 +99,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              @click="editRow(scope.row)"
               type="primary">编辑
             </el-button>
             <el-button
@@ -148,6 +149,34 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddNew = false">取 消</el-button>
         <el-button type="primary" @click="addNew()">确 定</el-button>
+      </div>
+    </el-dialog>
+<!--    修改新闻弹框-->
+    <el-dialog title="修改用户" :visible.sync="dialogUpdate">
+      <el-form :model="updateForm" :rules="addRules" ref="updateForm">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="updateForm.title" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="所属类别" prop="category.id">
+          <el-select v-model="updateForm.category.id" clearable placeholder="请选择">
+            <el-option
+              v-for="item in categorys"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户id" prop="user.id">
+          <el-input v-model="updateForm.user.id" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="updateForm.content" clearable type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdate = false">取 消</el-button>
+        <el-button type="primary" @click="updateRow()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -210,7 +239,7 @@ export default {
       addRules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 20, message: '长度在 3 到 50 个字符', trigger: 'blur' }
         ],
         category: {
           id: [
@@ -226,7 +255,19 @@ export default {
           { required: true, message: '请输入内容', trigger: 'blur' },
           { min: 3, message: '最少三个字符', trigger: 'blur' }
         ]
+      },
+      dialogUpdate: false,
+      updateForm: {
+        title: null,
+        category: {
+          id: null
+        },
+        user: {
+          id: null
+        },
+        content: null
       }
+      // 校验条件与新增公用
     }
   },
   methods: {
@@ -262,7 +303,9 @@ export default {
       console.log(selection)
     },
     editRow (row) {
-
+      console.log(row)
+      this.updateForm = JSON.parse(JSON.stringify(row))
+      this.dialogUpdate = true
     },
     deleteRow (id) {
       this.$confirm('是否删除？此操作会删除相关评论信息', '警告！')
@@ -342,6 +385,30 @@ export default {
           this.dialogAddNew = false
         } else {
           this.$message.error('请正确输入')
+        }
+      })
+    },
+    updateRow () {
+      this.$refs.updateForm.validate(bool => {
+        if (bool) {
+          this.$axios.put('new/update', this.updateForm)
+            .then(resp => {
+              if (resp.data.code === 200) {
+                this.$notify.success({
+                  title: '修改成功 code:' + resp.data.code,
+                  message: 'message' + resp.data.message
+                })
+                this.select(this.selectForm)
+              } else {
+                this.$notify.warning({
+                  title: '修改失败 code:' + resp.data.code,
+                  message: 'message:' + resp.data.message
+                })
+              }
+            })
+          this.dialogUpdate = false
+        } else {
+          this.$message.warning('请正确输入')
         }
       })
     }
